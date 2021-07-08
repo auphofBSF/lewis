@@ -181,11 +181,21 @@ class StateMachineDevice(DeviceBase, CanProcessComposite):
         """
 
         # determine if can send message and then send it
-        if self._adapters._adapters["stream"].is_running and getattr(
-            self._adapters._adapters["stream"].interface, "handler", None
+        if getattr(self, "_adapters", None):
+            adapters = self._adapters
+        elif getattr(self, "_parent_device", None) and getattr(
+            self._parent_device, "_adapters", None
+        ):
+            adapters = self._parent_device._adapters
+        else:
+            adapters = None
+        if (
+            adapters
+            and adapters._adapters["stream"].is_running
+            and getattr(adapters._adapters["stream"].interface, "handler", None)
         ):
             try:
-                stream_server = self._adapters._adapters["stream"]._server
+                stream_server = adapters._adapters["stream"]._server
                 # send message to all connected stream handlers
                 for handler in stream_server._accepted_connections:
                     if handler.connected:
