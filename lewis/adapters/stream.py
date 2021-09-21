@@ -103,7 +103,7 @@ class StreamHandler(asynchat.async_chat):
 
     def _send_reply(self, reply):
         if reply is not None:
-            self.log.debug("Sending reply %s", reply)
+            self.log.debug("Sending reply %s", repr(reply))
             self._push(reply)
 
     def _handle_error(self, request, error):
@@ -143,7 +143,7 @@ class StreamHandler(asynchat.async_chat):
         self._send_reply(reply)
 
     def unsolicited_reply(self, reply):
-        self.log.debug("Sending unsolicited reply %s", reply)
+        self.log.debug("Sending unsolicited reply %s", repr(reply))
         self._push(reply)
 
     def handle_close(self):
